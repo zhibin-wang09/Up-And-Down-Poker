@@ -50,8 +50,15 @@ io.on("connection", (socket) => {
     const roomIDString = roomID ? "" + roomID : "" + newRoomID;
     const gameID = roomIDString;
     let game = games.get(Number(gameID));
+
+    // create game if it does not already exist
     if(!game){
       game = initializeGameState();
+    }
+
+    // make sure players are restricted at 2
+    if(io.sockets.adapter.rooms.get(roomIDString)?.size === 2){
+      return;
     }
     games.set(Number(gameID), game);
     socket.join(roomIDString);
@@ -61,6 +68,8 @@ io.on("connection", (socket) => {
 
   socket.on("onPlayerReady", (gameID: number) => {
     const room = io.sockets.adapter.rooms.get("" + gameID);
+
+    // wait for 2 players to start game
     if(room?.size == 2){
       console.log("start")
       io.sockets.in("" + gameID).emit("startGameSession");
