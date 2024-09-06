@@ -40,6 +40,7 @@ export default function GameBoard() {
   }, [roomID]);
 
   function playCard(card: Card, player: Player) {
+    console.log("play");
     socket.emit("playCard", card, parseInt(roomID!), player);
   }
 
