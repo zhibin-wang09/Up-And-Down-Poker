@@ -19,6 +19,7 @@ const games = new Map<number, Game>();
 
 // listens for the connection event
 io.on("connection", (socket) => {
+  console.log(`user ${socket.id} joined`);
   // initialize the games in socket data
 
   socket.on("getGameState", (gameID: number) => {
@@ -45,32 +46,30 @@ io.on("connection", (socket) => {
   });
 
   socket.on("joinGameRoom", (roomID: number) => {
-    console.log("edafdasfdas")
     const newRoomID = Math.floor(Date.now() * Math.random());
-    const gameID = roomID ? "" + roomID : "" + newRoomID;
-    const existingGame = games.get(Number(gameID));
-    if (existingGame) {
-      socket.emit("sendGameState", existingGame);
-      return;
+    const roomIDString = roomID ? "" + roomID : "" + newRoomID;
+    const gameID = roomIDString;
+    let game = games.get(Number(gameID));
+    if(!game){
+      game = initializeGameState();
     }
-    const game: Game = initializeGameState();
     games.set(Number(gameID), game);
-    socket.join(roomID ? "" + roomID : "" + newRoomID);
+    socket.join(roomIDString);
     console.log("joined");
     socket.emit("sendRoomID", roomID ? roomID : newRoomID);
   });
 
   socket.on("onPlayerReady", (gameID: number) => {
-    let game = games.get(gameID);
-    game?.incNumPlayersInGame();
-    console.log("Detect player in: " + game?.numPlayersInGame)
-    if(game?.numPlayersInGame == 2){
+    const room = io.sockets.adapter.rooms.get("" + gameID);
+    if(room?.size == 2){
       console.log("start")
       io.sockets.in("" + gameID).emit("startGameSession");
     }
   })
 
-  socket.on("disconnect", () => {});
+  socket.on("disconnect", () => {
+    console.log(`user ${socket.id} left`);
+  });
 });
 
 httpServer.listen(8080);
