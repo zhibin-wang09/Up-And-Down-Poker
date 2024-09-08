@@ -8,9 +8,6 @@ import {
   SocketData,
   ServerToClient,
 } from "../shared/types/events";
-import{
-  hideOpponentCard
-} from  "./apis/cardApi"
 
 const app = express();
 const httpServer = createServer(app);
@@ -51,17 +48,24 @@ io.on("connection", (socket) => {
   socket.on("joinGameRoom", (roomID: number) => {
     const newRoomID = Math.floor(Date.now() * Math.random());
     const roomIDString = roomID ? "" + roomID : "" + newRoomID;
-    const gameID = roomIDString;
+
+    // make sure players are restricted at 2
+    if(io.sockets.adapter.rooms.get(roomIDString)?.size === 2){
+      return;
+    }
+
+    socket.join(roomIDString);
+    console.log("joined");
+    socket.emit("sendRoomID", roomID ? roomID : newRoomID);
+  });
+
+  socket.on("onPlayerReady", (gameID: number) => {
+    const room = io.sockets.adapter.rooms.get("" + gameID);
     let game = games.get(Number(gameID));
 
     // create game if it does not already exist
     if(!game){
       game = initializeGameState();
-    }
-
-    // make sure players are restricted at 2
-    if(io.sockets.adapter.rooms.get(roomIDString)?.size === 2){
-      return;
     }
 
     // set up the player name by id so we can identify player using socket id
@@ -71,18 +75,11 @@ io.on("connection", (socket) => {
       game.player2.name = socket.id;
     }
 
-    games.set(Number(gameID), game);
-    socket.join(roomIDString);
-    console.log("joined");
-    socket.emit("sendRoomID", roomID ? roomID : newRoomID);
-  });
-
-  socket.on("onPlayerReady", (gameID: number) => {
-    const room = io.sockets.adapter.rooms.get("" + gameID);
 
     // wait for 2 players to start game
     if(room?.size == 2){
-      console.log("start")
+      console.log("start");
+      games.set(Number(gameID), game);
       io.sockets.in("" + gameID).emit("startGameSession");
     }
   })
