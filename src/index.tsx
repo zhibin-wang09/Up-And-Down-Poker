@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import CreateGameForm from './components/CreateGameForm/createGameForm'
 import WaitingPage from "./components/WaitingPage/waitingPage";
-import GameBoard from "./gameBoard";
+import GameBoard from "./components/GameBoard/gameBoard";
 
 
 const router = createBrowserRouter([

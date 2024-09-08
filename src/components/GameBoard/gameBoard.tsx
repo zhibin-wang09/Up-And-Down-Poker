@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import Hand from "./components/Hand/hand";
-import Pile from "./components/Pile/pile";
+import Hand from "../Hand/hand";
+import Pile from "../Pile/pile";
 import {
   Pile as TPile,
   Card,
   Player,
   PlayerId,
   Game,
-} from "./types";
+} from "../../types";
 import { Box } from "@chakra-ui/react";
-import socket from "./connection/socket";
+import socket from "../../connection/socket";
 import { useParams } from "react-router-dom";
 
 export default function GameBoard() {
