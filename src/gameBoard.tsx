@@ -26,8 +26,13 @@ export default function GameBoard() {
 
     socket.on("sendGameState", (response) => {
       const game: Game = response;
-      setPlayer1(game.player1);
-      setPlayer2(game.player2);
+      if(game.player1.name === socket.id){
+        setPlayer1(game.player1);
+        setPlayer2(game.player2);
+      }else{
+        setPlayer1(game.player2);
+        setPlayer2(game.player1);
+      }
       setcenterDrawPile1(game.centerDrawPile1);
       setcenterDrawPile2(game.centerDrawPile2);
       setcenterPile1(game.centerPile1);
@@ -61,7 +66,7 @@ export default function GameBoard() {
         justifyContent="space-between"
         margin="30px"
       >
-        <Hand cards={player1.hand} playCard={playCard} player={player1}></Hand>
+        <Hand cards={player1.hand} playCard={playCard} player={player1} isFlipped ={true}></Hand>
         <Pile Cards={player1.drawPile} isFlipped={true} />
       </Box>
       <Box
@@ -81,7 +86,7 @@ export default function GameBoard() {
         justifyContent="space-between"
         margin="30px"
       >
-        <Hand cards={player2.hand} playCard={playCard} player={player2}></Hand>
+        <Hand cards={player2.hand} playCard={playCard} player={player2} isFlipped={false}></Hand>
         <Pile Cards={player2.drawPile} isFlipped={true} />
       </Box>
     </Box>

@@ -8,6 +8,9 @@ import {
   SocketData,
   ServerToClient,
 } from "../shared/types/events";
+import{
+  hideOpponentCard
+} from  "./apis/cardApi"
 
 const app = express();
 const httpServer = createServer(app);
@@ -20,18 +23,18 @@ const games = new Map<number, Game>();
 // listens for the connection event
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} joined`);
-  // initialize the games in socket data
 
+  //  initialize the games in socket data
+  //  this assumes that the game has been created when the room is created
+  //  since the game has been created and players has been assigned
+  //  we will only send game state visible to that player
   socket.on("getGameState", (gameID: number) => {
     // if the game was already created, join that game instead
-    const existingGame = games.get(gameID);
+    let existingGame = games.get(gameID);
     if (existingGame) {
       socket.emit("sendGameState", existingGame);
       return;
     }
-    const game: Game = initializeGameState();
-    games.set(gameID, game);
-    socket.emit("sendGameState", game);
   });
 
   socket.on("playCard", (card: Card, gameID: number, player: Player) => {
@@ -60,6 +63,14 @@ io.on("connection", (socket) => {
     if(io.sockets.adapter.rooms.get(roomIDString)?.size === 2){
       return;
     }
+
+    // set up the player name by id so we can identify player using socket id
+    if(!game.player1.name){
+      game.player1.name = socket.id;
+    }else if(!game.player2.name){
+      game.player2.name = socket.id;
+    }
+
     games.set(Number(gameID), game);
     socket.join(roomIDString);
     console.log("joined");

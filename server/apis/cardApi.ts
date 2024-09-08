@@ -194,3 +194,16 @@ function createGame(): Game{
   );
   return game;
 }
+
+export function hideOpponentCard(game: Game, socketID: string): Game{
+  const player1 = game.player1;
+  const gameClone = structuredClone(game);
+  // hide the opponents card so the player can't see the opponent
+  if(player1.name === socketID){
+    gameClone.player2 = new Player([],[],0);
+  }else{
+    gameClone.player1 = new Player([],[],0);
+  }
+
+  return gameClone;
+}

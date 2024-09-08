@@ -76,7 +76,6 @@ export class Game {
     centerPile2: Pile= [];
     centerDrawPile1: Pile =[];
     centerDrawPile2: Pile=[];
-    numPlayersInGame: number = 0;
 
     constructor(player1: Player, player2: Player, centerPile1: Pile, centerPile2: Pile, centerDrawPile1: Pile, centerDrawPile2: Pile){
        this.player1 = player1;
@@ -85,12 +84,8 @@ export class Game {
        this.centerPile2 = centerPile2
        this.centerDrawPile1 = centerDrawPile1;
        this.centerDrawPile2 = centerDrawPile2;
-       this.numPlayersInGame = 0;
     }
 
-    incNumPlayersInGame(){
-      this.numPlayersInGame++;
-    }
 }
 
 export type pileAndHand = {
