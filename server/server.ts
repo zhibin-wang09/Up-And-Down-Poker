@@ -16,6 +16,7 @@ const io = new Server<ClientToServer, ServerToClient, SocketData>(httpServer, {
 });
 
 const games = new Map<number, Game>();
+const socketToGame = new Map<string,number>();
 
 // listens for the connection event
 io.on("connection", (socket) => {
@@ -62,6 +63,7 @@ io.on("connection", (socket) => {
   socket.on("onPlayerReady", (gameID: number) => {
     const room = io.sockets.adapter.rooms.get("" + gameID);
     let game = games.get(Number(gameID));
+    socketToGame.set(socket.id, gameID);
 
     // create game if it does not already exist
     if(!game){
@@ -86,6 +88,20 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left`);
+    const gameID = socketToGame.get(socket.id);
+    const player1 = socket.id;
+    let player2 = '';
+    socketToGame.forEach((g, socketID) => {
+      if(gameID === g){
+        player2 = socketID;
+      }
+    })
+
+    socketToGame.delete(player1);
+    socketToGame.delete(player2);
+    games.delete(gameID!);
+    io.in("" + gameID).socketsLeave("" + gameID);
+    io.to(player2).emit("endGame");
   });
 });
 

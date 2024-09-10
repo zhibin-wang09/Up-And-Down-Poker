@@ -11,6 +11,7 @@ import {
 import { Box } from "@chakra-ui/react";
 import socket from "../../connection/socket";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function GameBoard() {
   const {roomID} = useParams();
@@ -20,6 +21,7 @@ export default function GameBoard() {
   const [centerDrawPile2, setcenterDrawPile2] = useState<TPile>([]);
   const [player1, setPlayer1] = useState<Player>(new Player([],[],PlayerId.Default));
   const [player2, setPlayer2] = useState<Player>(new Player([],[],PlayerId.Default));
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.emit("getGameState", parseInt(roomID!));
@@ -37,6 +39,10 @@ export default function GameBoard() {
       setcenterDrawPile2(game.centerDrawPile2);
       setcenterPile1(game.centerPile1);
       setcenterPile2(game.centerPile2);
+    });
+
+    socket.on("endGame", () => {
+      navigate("/");
     });
 
     return () => {

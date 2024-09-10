@@ -8,6 +8,7 @@ export interface ServerToClient {
   sendGameState: (game: Game) => void;
   sendRoomID: (roomID: number) => void;
   startGameSession: () => void;
+  endGame: () => void;
 }
 
 // the list of events that goes from client to server
