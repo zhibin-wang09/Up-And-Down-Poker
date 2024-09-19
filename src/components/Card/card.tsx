@@ -25,7 +25,7 @@ export default function Card({ card, isFlipped, playCard, player }: CardProp) {
           initial={{ x: 0, y: 0, opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={() => {
-            if (player != null && playCard) playCard(card, player);
+            if (player != null && playCard && !isFlipped) playCard(card, player);
           }}
           src={src}
           layoutId={card?.toString()} // Framer motion use layoutId to animate the image transition whne Card is removed from one component to another component
