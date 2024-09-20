@@ -3,5 +3,6 @@ jest.mock('socket.io-client', () => {
     const on = jest.fn();
     const off = jest.fn();
     const socket = {emit,on,off};
-    return jest.fn(() => socket);
+    const io = jest.fn(() => socket);
+    return {io};
 })
