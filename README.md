@@ -4,7 +4,7 @@
 
 ## For Players
 
-### Set up of the game
+### Set up of the game:
 - The game requires two players and each player are dealt with 20 cards
 - Each player has 4 cards in hand and 16 cards from a draw pile
 - There are 4 stacks of cards in the center of the board
@@ -30,3 +30,7 @@ Running locally:
 - You can see the game!
 
 *Note*: Running locally limits the feature where two players get to play cards simultaneously.
+
+## Playthrough
+
+![playthrough](Up-and-Down-Poker-Demo.mov)
