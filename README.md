@@ -25,7 +25,7 @@ If this is the first time you download the repo, in the root folder enter the co
 
 Running locally:
 - In the root folder enter the command `npm start`
-- In the server folder enter the command `npx tsx server.ts`
+- In the server folder enter the command `npx tsx serer.ts`
 - Go to `localhost:3000`
 - You can see the game!
 
@@ -33,4 +33,4 @@ Running locally:
 
 ## Playthrough
 
-![playthrough](Up-and-Down-Poker-Demo.gif)
+![playthrough](Up-And-Down-Poker-Demo.gif)
