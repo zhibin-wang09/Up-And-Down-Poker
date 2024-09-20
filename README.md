@@ -33,4 +33,4 @@ Running locally:
 
 ## Playthrough
 
-![playthrough](Up-and-Down-Poker-Demo.mov)
+![playthrough](Up-and-Down-Poker-Demo.gif)
