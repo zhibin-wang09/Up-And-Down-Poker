@@ -8,6 +8,7 @@ import {
   SocketData,
   ServerToClient,
 } from "../shared/types/events";
+import {createMachine, assign, createActor, setup} from 'xstate';
 
 const app = express();
 const httpServer = createServer(app);
@@ -89,19 +90,16 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left`);
     const gameID = socketToGame.get(socket.id);
-    const player1 = socket.id;
-    let player2 = '';
-    socketToGame.forEach((g, socketID) => {
-      if(gameID === g){
-        player2 = socketID;
-      }
-    })
-
-    socketToGame.delete(player1);
-    socketToGame.delete(player2);
+    const userWhoLeft = socket.id;
+    let userStillInGame = '';
+    let game = games.get(gameID!);
+    userStillInGame = game?.player1.name == userWhoLeft ? game?.player2.name! :  game?.player2.name!;
+    console.log("on disconnect", gameID, userWhoLeft, userStillInGame);
+    socketToGame.delete(userStillInGame);
+    socketToGame.delete(userWhoLeft);
     games.delete(gameID!);
     io.in("" + gameID).socketsLeave("" + gameID);
-    io.to(player2).emit("endGame");
+    io.to(userStillInGame).emit("endGame");
   });
 });
 
